@@ -1,0 +1,57 @@
+// examples/simple_process.ron
+#![enable(implicit_some)] // Garder cette ligne est bien
+(
+    // Utilise des maps RON standard: clé: valeur
+    nodes: {
+        // Utiliser des UUIDs valides réels si possible, sinon ces placeholders feront l'affaire pour le test
+        "a1a1a1a1-b1b1-c1c1-d1d1-e1e1e1e1e1e1": ( // Structure ProcessNode
+            id: "a1a1a1a1-b1b1-c1c1-d1d1-e1e1e1e1e1e1",
+            name: "Traiter Données",
+            // Format correct pour Rect et Pos2 en RON par défaut
+            rect: (
+                min: ( x: 100.0, y: 100.0 ),
+                max: ( x: 220.0, y: 160.0 ),
+            ),
+        ),
+         "a2a2a2a2-b2b2-c2c2-d2d2-e2e2e2e2e2e2": ( // Structure ProcessNode
+            id: "a2a2a2a2-b2b2-c2c2-d2d2-e2e2e2e2e2e2",
+            name: "Générer Rapport",
+            rect: ( // Format correct
+                min: ( x: 300.0, y: 100.0 ),
+                max: ( x: 420.0, y: 160.0 ),
+            ),
+        ),
+    },
+    arrows: {
+        "f1f1f1f1-f1f1-f1f1-f1f1-f1f1f1f1f1f1": ( // Structure Arrow
+            id: "f1f1f1f1-f1f1-f1f1-f1f1-f1f1f1f1f1f1",
+            label: Some("Données Traitées"), // Ou juste "Données Traitées" avec implicit_some
+            arrow_type: Output, // Les Enums sont OK
+            source: ( // Structure ConnectionPoint
+                node_id: "a1a1a1a1-b1b1-c1c1-d1d1-e1e1e1e1e1e1",
+                side: Right,
+            ),
+            target: ( // Structure ConnectionPoint
+                node_id: "a2a2a2a2-b2b2-c2c2-d2d2-e2e2e2e2e2e2",
+                side: Left,
+            ),
+        ),
+        "f2f2f2f2-f2f2-f2f2-f2f2-f2f2f2f2f2f2": ( // Structure Arrow
+            id: "f2f2f2f2-f2f2-f2f2-f2f2-f2f2f2f2f2f2",
+            label: Some("Données Brutes"),
+            arrow_type: Input,
+            // Note: L'UUID nul ici pourrait causer des problèmes si vous essayez
+            // de trouver ce nœud plus tard. Une meilleure approche serait
+            // peut-être un type Option<ConnectionPoint> ou un type Enum spécifique
+            // pour représenter une connexion externe. Pour l'instant, laissons-le.
+            source: (
+                 node_id: "00000000-0000-0000-0000-000000000000",
+                 side: Left,
+            ),
+            target: (
+                node_id: "a1a1a1a1-b1b1-c1c1-d1d1-e1e1e1e1e1e1",
+                side: Left,
+            ),
+        ),
+    },
+)

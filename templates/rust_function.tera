@@ -1,0 +1,27 @@
+/// Generated SADT Function: {{ name }}
+///
+/// Inputs:{% for input in inputs %}
+///   - {{ input.0 }} (Type: {{ input.1 }}){% endfor %}
+/// Controls:{% for control in controls %}
+///   - {{ control.0 }} (Type: {{ control.1 }}){% endfor %}
+/// Mechanisms:{% for mechanism in mechanisms %}
+///   - {{ mechanism.0 }} (Type: {{ mechanism.1 }}){% endfor %}
+/// Outputs:{% for output in outputs %}
+///   - {{ output.0 }} (Type: {{ output.1 }}){% endfor %}
+#[allow(unused_variables, unused_mut)] // Pour éviter les warnings sur les placeholders
+pub fn {{ name | slugify | lower }}({% for input in inputs %}
+    {{ input.0 | slugify | lower }}: {{ input.1 }},{% endfor %}{% for control in controls %}
+    {{ control.0 | slugify | lower }}_control: {{ control.1 }},{% endfor %}{% for mechanism in mechanisms %}
+    {{ mechanism.0 | slugify | lower }}_resource: &{{ mechanism.1 }},{# Mécanismes souvent passés par référence #}{% endfor %}
+) -> ({% for output in outputs %}{{ output.1 }}{% if not loop.last %}, {% endif %}{% else %}(){% endfor %}) {
+    // TODO: Implement SADT activity logic for "{{ name }}"
+    println!("Executing SADT function: {{ name }}");
+
+    // Placeholder return based on outputs
+    {% if outputs %}
+    todo!("Return actual output(s)")
+    // Exemple: return (Default::default(), ...);
+    {% else %}
+    // No output defined
+    {% endif %}
+}

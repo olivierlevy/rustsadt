@@ -1,0 +1,26 @@
+# Documentation SADT Générée
+
+Ce document décrit le diagramme SADT généré par RustSADT.
+
+## Activités (Nœuds)
+
+{% for node in nodes %}
+### {{ loop.index }}. {{ node.name }} (ID: `{{ node.id }}`)
+
+*   **Description:** (Ajouter une description ici, potentiellement depuis le modèle)
+*   **Position:** ({{ node.rect.min.x | round }}, {{ node.rect.min.y | round }})
+*   **Taille:** {{ node.rect.width() | round }} x {{ node.rect.height() | round }}
+
+*   **Entrées (Inputs):** (Lister les flèches entrantes de type Input)
+*   **Sorties (Outputs):** (Lister les flèches sortantes de type Output)
+*   **Contrôles (Controls):** (Lister les flèches entrantes de type Control)
+*   **Mécanismes (Mechanisms):** (Lister les flèches entrantes de type Mechanism)
+
+---
+{% else %}
+Aucun nœud dans ce diagramme.
+{% endfor %}
+
+## Flux (Flèches)
+
+(Ajouter une section listant les flèches et leurs connexions si nécessaire)

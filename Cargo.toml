@@ -1,0 +1,21 @@
+[package]
+name = "rustsadt"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eframe = "0.27" # Ou la dernière version stable
+egui = { version = "0.27", features = ["persistence"] } # Persistence pour l'état egui si besoin
+serde = { version = "1.0", features = ["derive"] }
+ron = "0.8"
+uuid = { version = "1.8", features = ["v4", "serde"] } # Pour les ID uniques
+tera = "1.19"
+log = "0.4"
+env_logger = "0.11"
+rfd = "0.14" # Rust File Dialogs (pour ouvrir/sauvegarder)
+thiserror = "1.0" # Pour une gestion d'erreurs facilitée
+
+# Optionnel pour l'export SVG/PNG
+# svg = "0.14"
+# tiny-skia = "0.11" # Pour rasteriser en PNG (plus complexe)
+# usvg = "0.38" # Pour travailler avec SVG

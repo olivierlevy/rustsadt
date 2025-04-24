@@ -1,0 +1,53 @@
+//! Automatically generated Rust module from SADT diagram.
+//! Module: {{ module_name }}
+
+// Placeholder types - Define or import actual types as needed.
+// Example: type InputData = String;
+// type OutputData = i32;
+// type ControlParam = bool;
+// struct MechanismResource { /* ... */ }
+#![allow(dead_code, unused_variables, unused_mut)] // Pour le module généré
+
+type InputData = (); // Placeholder
+type OutputData = (); // Placeholder
+type ControlParam = (); // Placeholder
+struct MechanismResource; // Placeholder
+
+{% for function in functions %}
+// --- Function: {{ function.name }} ---
+
+/// Generated SADT Function: {{ function.name }}
+///
+/// Inputs:{% for input in function.inputs %}
+///   - {{ input.0 }} (Type: {{ input.1 }}){% endfor %}
+/// Controls:{% for control in function.controls %}
+///   - {{ control.0 }} (Type: {{ control.1 }}){% endfor %}
+/// Mechanisms:{% for mechanism in function.mechanisms %}
+///   - {{ mechanism.0 }} (Type: {{ mechanism.1 }}){% endfor %}
+/// Outputs:{% for output in function.outputs %}
+///   - {{ output.0 }} (Type: {{ output.1 }}){% endfor %}
+pub fn {{ function.name | slugify | lower }}({% for input in function.inputs %}
+    {{ input.0 | slugify | lower }}: {{ input.1 }},{% endfor %}{% for control in function.controls %}
+    {{ control.0 | slugify | lower }}_control: {{ control.1 }},{% endfor %}{% for mechanism in function.mechanisms %}
+    {{ mechanism.0 | slugify | lower }}_resource: &{{ mechanism.1 }},{# Mécanismes souvent passés par référence #}{% endfor %}
+) -> ({% for output in function.outputs %}{{ output.1 }}{% if not loop.last %}, {% endif %}{% else %}(){% endfor %}) {
+    // TODO: Implement SADT activity logic for "{{ function.name }}"
+    println!("Executing SADT function: {{ function.name }}");
+
+    // Placeholder return based on outputs
+    {% if function.outputs %}
+    todo!("Return actual output(s) for {{ function.name }}")
+    // Exemple: return (Default::default(), ...);
+    {% else %}
+    // No output defined for {{ function.name }}
+    {% endif %}
+}
+
+{% endfor %}
+
+// --- Main execution flow (optional example) ---
+// pub fn run_process() {
+//     println!("Running generated SADT process...");
+     // Example: let output1 = process_data(...);
+     // format_report(output1, ...);
+// }
