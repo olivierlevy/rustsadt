@@ -4,12 +4,12 @@ Ce document décrit le diagramme SADT généré par RustSADT.
 
 ## Activités (Nœuds)
 
-{% for node in nodes %}
+{% for node in nodes %} {# Itère sur les MarkdownNodeContext #}
 ### {{ loop.index }}. {{ node.name }} (ID: `{{ node.id }}`)
 
 *   **Description:** (Ajouter une description ici, potentiellement depuis le modèle)
-*   **Position:** ({{ node.rect.min.x | round }}, {{ node.rect.min.y | round }})
-*   **Taille:** {{ node.rect.width() | round }} x {{ node.rect.height() | round }}
+*   **Position:** ({{ node.x | round }}, {{ node.y | round }}) {# Utilise les champs x, y #}
+*   **Taille:** {{ node.width | round }} x {{ node.height | round }} {# Utilise les champs width, height #}
 
 *   **Entrées (Inputs):** (Lister les flèches entrantes de type Input)
 *   **Sorties (Outputs):** (Lister les flèches sortantes de type Output)
