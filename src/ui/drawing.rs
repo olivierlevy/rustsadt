@@ -11,7 +11,7 @@ pub fn draw_diagram(diagram: &SadtDiagram, painter: &Painter, ui_state: &UiState
         draw_node(node, painter, ui_state.selected_node == Some(node.id));
     }
     for arrow in diagram.arrows.values() {
-        draw_arrow(arrow, diagram, painter);
+        draw_arrow(arrow, diagram, painter, ui_state);
     }
 
     // Dessiner la flèche en cours de création
@@ -51,7 +51,7 @@ fn draw_node(node: &ProcessNode, painter: &Painter, is_selected: bool) {
     }
 }
 
-fn draw_arrow(arrow: &Arrow, diagram: &SadtDiagram, painter: &Painter) {
+fn draw_arrow(arrow: &Arrow, diagram: &SadtDiagram, painter: &Painter, ui_state: &UiState) {
     if let (Some(source_node), Some(target_node)) = (
         diagram.get_node(arrow.source.node_id),
         diagram.get_node(arrow.target.node_id),
@@ -59,13 +59,16 @@ fn draw_arrow(arrow: &Arrow, diagram: &SadtDiagram, painter: &Painter) {
         let start_pos = get_connection_pos(source_node, arrow.source.side);
         let end_pos = get_connection_pos(target_node, arrow.target.side);
 
-        let color = match arrow.arrow_type {
+        let base_color = match arrow.arrow_type {
             ArrowType::Input => Color32::LIGHT_GREEN,
             ArrowType::Output => Color32::LIGHT_BLUE,
             ArrowType::Control => Color32::LIGHT_RED,
             ArrowType::Mechanism => Color32::LIGHT_YELLOW,
         };
-        let stroke = Stroke::new(1.5, color);
+        let is_selected = ui_state.selected_arrow == Some(arrow.id);
+        let stroke_width = if is_selected { 3.0 } else { 1.5 };
+        let color = if is_selected { Color32::YELLOW } else { base_color }; // Jaune si sélectionnée
+        let stroke = Stroke::new(stroke_width, color);
 
         painter.line_segment([start_pos, end_pos], stroke);
 
@@ -73,14 +76,17 @@ fn draw_arrow(arrow: &Arrow, diagram: &SadtDiagram, painter: &Painter) {
         draw_arrow_head(painter, end_pos, start_pos, color);
 
         // Dessiner le label (simplifié, au milieu)
-        if let Some(label) = &arrow.label {
-             painter.text(
-                start_pos.lerp(end_pos, 0.5), // Position au milieu
-                egui::Align2::CENTER_CENTER,
-                label,
-                egui::FontId::proportional(10.0),
-                color,
-            );
+        // Ne pas dessiner le label si on est en train de l'éditer (pour éviter superposition)
+        if ui_state.renaming_arrow != Some(arrow.id) {
+            if let Some(label) = &arrow.label {
+                painter.text(
+                    start_pos.lerp(end_pos, 0.5), // Position au milieu
+                    egui::Align2::CENTER_CENTER,
+                    label,
+                    egui::FontId::proportional(10.0),
+                    color,
+                );
+            }
         }
     } else {
         log::warn!("Impossible de dessiner la flèche {}: noeud source ou cible manquant.", arrow.id);
@@ -148,4 +154,6 @@ pub struct UiState {
     pub arrow_creation_start: Option<ConnectionPoint>, // Point de départ de la flèche en cours
     pub mouse_pos: Pos2, // Dernière position connue de la souris sur le canvas
     pub renaming_node: Option<NodeId>, // ID du noeud en cours de renommage
+    pub renaming_arrow: Option<ArrowId>, // ID de la flèche en cours de renommage
+    pub renaming_label_text: String,     // Texte temporaire pour l'édition (nœud ou flèche)
 }
