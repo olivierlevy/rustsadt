@@ -1,5 +1,5 @@
 use crate::error::Result; // Utilise l'alias Result<T> = std::result::Result<T, RustSadtError>
-use crate::sadt_model::{ProcessNode, SadtDiagram};
+use crate::sadt_model::{SadtDiagram};
 use crate::sadt_elements::ArrowType;
 use serde::Serialize;
 use tera::{Context, Tera};

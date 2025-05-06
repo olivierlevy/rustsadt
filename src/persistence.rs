@@ -8,7 +8,6 @@ use std::io::{Read, Write};
 use std::path::PathBuf;
 // Ajouts pour SVG
 use svg::node::element::{Line, Polygon, Rectangle, Text as SvgText}; // Renommer Text pour éviter conflit
-use svg::node::Text as SvgTextNode; // Contenu texte
 use svg::Document;
 
 const FILE_EXTENSION: &str = "ron";

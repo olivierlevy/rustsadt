@@ -12,6 +12,7 @@ mod sadt_model;
 mod ui {
     pub mod drawing;
     pub mod interaction;
+    pub mod transform;
     // Le fichier `mod.rs` est souvent implicite, pas besoin de 'mod_impl'
 }
 
