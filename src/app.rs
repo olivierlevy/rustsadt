@@ -246,9 +246,12 @@ impl eframe::App for RustSadtApp {
                           // Position ajout via menu: pour l'instant fixe dans le monde visible initial
                           // Idéalement, utiliser le centre de la vue actuelle transformé en monde
                           let pos_monde_vec = self.state.pan + egui::vec2(200.0, 150.0) / self.state.zoom; // Approximation Vec2
-                          let pos_monde = Pos2::new(pos_monde_vec.x, pos_monde_vec.y); // <<< Conversion Vec2 -> Pos2
+                         let pos_monde = Pos2::new(pos_monde_vec.x, pos_monde_vec.y); // <<< Conversion Vec2 -> Pos2
                          let node_name = format!("Activité {}", self.state.diagram.nodes.len() + 1);
-                         self.state.diagram.add_node(node_name, pos_monde);
+                         let new_node_id = self.state.diagram.add_node(node_name, pos_monde);
+                         if let Some(node) = self.state.diagram.get_node_mut(new_node_id) {
+                            node.algorithm = "add".to_string();
+                         }
                          log::info!("Nœud ajouté via menu.");
                          ui.close_menu();
                      }

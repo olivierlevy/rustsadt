@@ -1,5 +1,4 @@
-use crate::sadt_elements::Side;
-use crate::sadt_elements::{ArrowId, ArrowType, ConnectionPoint, NodeId};
+use crate::sadt_elements::{ArrowId, ArrowType, ConnectionPoint, NodeId, Side};
 use egui::Rect;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -10,6 +9,7 @@ pub struct ProcessNode {
     pub id: NodeId,
     pub name: String,
     pub rect: Rect, // Position et taille dans l'UI egui
+    pub algorithm: String, // Name of the selected algorithm
     // On pourrait stocker les IDs des flèches connectées ici, mais
     // il est souvent plus simple de les retrouver via le diagramme global.
 }
@@ -40,7 +40,8 @@ impl SadtDiagram {
         let node = ProcessNode {
             id,
             name,
-            rect: Rect::from_min_size(pos, egui::vec2(120.0, 60.0)), // Taille par défaut
+            rect: Rect::from_min_size(pos, egui::vec2(120.0, 60.0)),
+            algorithm: "add".to_string(), // Default algorithm
         };
         self.nodes.insert(id, node);
         id

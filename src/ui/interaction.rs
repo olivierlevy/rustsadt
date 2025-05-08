@@ -24,10 +24,10 @@ pub fn handle_canvas_interactions(
     transform: &Transform, // Prend la transformation en argument
     app_state: &mut AppState,
 ) {
-    // Stocker la position MONDE de la souris (déjà calculée dans app.rs)
-    // let screen_pos_mouse = response.hover_pos().unwrap_or_else(|| response.rect.center());
-    // app_state.ui_state.mouse_pos = transform.screen_to_world(screen_pos_mouse);
-    // Est fait dans app.rs maintenant, ui_state.mouse_pos est déjà en monde
+    // Stocker la position MONDE de la souris
+    if let Some(screen_pos_mouse) = response.hover_pos() {
+        app_state.ui_state.mouse_pos = transform.screen_to_world(screen_pos_mouse);
+    }
 
     handle_arrow_selection(ctx, response, transform, app_state);
     handle_node_drag_and_select(ctx, response, transform, app_state);
@@ -199,16 +199,29 @@ fn handle_arrow_creation(ctx: &Context, response: &Response, transform: &Transfo
              if let Some(end_point) = find_closest_connection_point(&app_state.diagram, mouse_pos_world, CONNECTION_POINT_RADIUS * 4.0) {
                 if start_point.node_id != end_point.node_id && app_state.diagram.nodes.contains_key(&end_point.node_id) {
                     let arrow_type = match (start_point.side, end_point.side) {
-                        (Side::Right, Side::Left) => ArrowType::Output, (Side::Left, Side::Right) => ArrowType::Input,
-                        (_, Side::Top) => ArrowType::Control, (_, Side::Bottom) => ArrowType::Mechanism,
-                        (Side::Right, _) => ArrowType::Output, (_, Side::Left) => ArrowType::Input,
+                        (Side::Right, Side::Left) => ArrowType::Output,
+                        (Side::Left, Side::Right) => ArrowType::Input,
+                        (_, Side::Top) => ArrowType::Control,
+                        (_, Side::Bottom) => ArrowType::Mechanism,
+                        (Side::Right, _) => ArrowType::Output,
+                        (_, Side::Left) => ArrowType::Input,
                         _ => ArrowType::Input,
                     };
-                    log::debug!("Fin création flèche vers: {:?}, type: {:?}", end_point, arrow_type);
+                    log::debug!(
+                        "Fin création flèche vers: {:?}, type: {:?}",
+                        end_point,
+                        arrow_type
+                    );
                     app_state.diagram.add_arrow(start_point.clone(), end_point, arrow_type, None);
-                } else { log::debug!("Annulation flèche (même nœud ou cible invalide)"); }
-            } else { log::debug!("Annulation flèche (relâchement dans vide)"); }
+                } else {
+                    log::debug!("Annulation flèche (même nœud ou cible invalide)");
+                }
+            } else {
+                log::debug!("Annulation flèche (relâchement dans vide)");
+            }
             app_state.ui_state.arrow_creation_start = None; // Toujours réinitialiser
+        } else {
+            log::trace!("arrow_creation_start is None");
         }
     }
 }
